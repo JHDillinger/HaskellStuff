@@ -1,6 +1,6 @@
-import System.IO
-import System.Directory
-import Data.List
+import           Data.List
+import           System.Directory
+import           System.IO
 
 main = do
     handle <- openFile "todo.txt" ReadMode

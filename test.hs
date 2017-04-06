@@ -1,4 +1,4 @@
-import Data.Char (isDigit)
+import           Data.Char (isDigit)
 --import Data.List
 
 main = print "Hello World!"
@@ -45,7 +45,7 @@ safetail2 a | null a || length a == 1 = []
             | otherwise = tail a
 
 safetail3 :: [a] -> [a]
-safetail3 [] =[]
+safetail3 []    =[]
 safetail3 (_:x) = x
 
 
@@ -83,7 +83,7 @@ insert i (x:xs) = if i <= x then i:(x:xs)
                   else x : insert i xs
 
 isort :: [Int] -> [Int]
-isort [] = []
+isort []     = []
 isort (x:xs) = insert x (isort xs)
 
 merge :: [Int] -> [Int] -> [Int]
@@ -94,8 +94,8 @@ merge (a:xs) (b:ys) = if a <= b then a : merge xs (b:ys)
                       else b : merge (a:xs) ys
 
 msort :: [Int] -> [Int]
-msort [] = []
-msort [x] = [x]
+msort []     = []
+msort [x]    = [x]
 msort (x:xs) = merge (qsort [x]) (qsort xs)
 
 --Higher Order Functions------------------------------

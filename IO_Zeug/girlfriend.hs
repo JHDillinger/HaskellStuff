@@ -1,5 +1,5 @@
-import System.IO
-import Data.Char
+import           Data.Char
+import           System.IO
 
 main = do
     --contents <- readFile "girlfriend.txt"
