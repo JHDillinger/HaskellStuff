@@ -1,4 +1,5 @@
 -- nim
+-- test
 -- two players take turns and remove one or more stars
 -- from the end of a single row
 -- the winner is the player who removes the last star or stars
