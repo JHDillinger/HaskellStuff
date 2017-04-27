@@ -12,7 +12,7 @@ myLast list = head (reverse list)
 myButLast :: [a] -> a
 myButLast []   = error "Empty list"
 myButLast [x]  = x
-myButLast list = list !! ((length list)-2)
+myButLast list = list !! (length list - 2)
 
 --3
 elementAt :: [a] -> Int -> a
@@ -26,19 +26,37 @@ myLength :: [a] -> Int
 myLength []   = 0
 myLength list = 1 + myLength (tail list)
 
+
 --5
 myReverse :: [a] -> [a]
 myReverse []     = []
-myReverse (x:xs) = (myReverse xs)++[x]
+myReverse (x:xs) = myReverse xs ++ [x]
 
---6 obviously inefficient and long compared to
+--6 Find out whether a list is a palindrome.
+-- obviously inefficient and long compared to
 -- isPalindrome list = list == (reverse list)
 isPalindrome :: (Eq a) => [a] -> Bool
-isPalindrome [] = True
-isPalindrome [x] = True
+isPalindrome []     = True
+isPalindrome [x]    = True
 isPalindrome (x:xs) =
-    if x == head (reverse xs)
-        then isPalindrome $ tail $ reverse xs
-    else False
+    x == head (reverse xs) && isPalindrome (tail $ reverse xs)
 
---7 
+--7 Flatten a nested list structure.
+data NestedList a = Elem a | List [NestedList a]
+
+flatten :: NestedList a -> [a]
+flatten (List [])     = []
+flatten (Elem x)      = [x]
+flatten (List (x:xs)) = flatten x ++ flatten (List xs)
+
+--8 Eliminate consecutive duplicates of list elements.
+-- shortest solution: compress = map head . group
+-- using Data.List.group
+
+compress ::Eq a => [a] -> [a]
+compress []     = []
+compress [x]    = [x]
+compress (x:xs) =
+    if x == (head xs)
+        then compress xs
+    else x:(compress xs)
