@@ -9,12 +9,14 @@ main = do
     a0 <- readLn
     putStrLn "Enter the eps value:"
     eps <- readLn
-    putStrLn "The Square Root is:"
+    putStrLn "The approximated square root is:"
     print (sqroot a0 eps n)
 
 sqroot :: (Ord a, Fractional a) => a -> a -> a -> a
 sqroot a0 eps n = within eps (nrepeat (next n) a0)
 
+relativesqroot :: (Ord a, Fractional a) => a -> a -> a -> a
+relativesqroot a0 eps n = relative eps (nrepeat (next n) a0)
 
 next :: (Fractional a) => a -> a -> a
 next n x = (x + n/x)/2
@@ -24,7 +26,12 @@ nrepeat f a = a:nrepeat f (f a)
 
 within :: (Num a, Ord a) => a -> [a] -> a
 within _ [] = 0
-within eps (a:b:rest) =
-    if abs (a-b) <= eps
-        then b
-        else within eps (b:rest)
+within eps (a:b:rest)
+    | abs (a-b) <= eps = b
+    | otherwise = within eps (b:rest)
+
+relative :: (Fractional a, Ord a) => a -> [a] -> a
+relative _ [] = 0
+relative eps (a:b:rest)
+    | abs (a/b-1) <= eps = b
+    | otherwise = relative eps (b:rest)
