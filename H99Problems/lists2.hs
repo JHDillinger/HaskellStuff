@@ -32,3 +32,30 @@ item (Single a)     = a
 
 decodeMod :: [ListItem a] -> [a]
 decodeMod = concatMap (\x -> replicate (count x) (item x))
+
+--13 Run-length encoding of a list (direct solution)
+-- had to look at the solutions :/
+
+-- encode folds the list with helper
+-- it takes the LAST element and writes it as (1,x)
+-- at the beginning of the resulting list?!
+-- then if the next element is also x, it increments 1
+-- how does helper work? isn't the tail ys of type [a]
+-- and the head of typ [(Int, a)]?
+-- Edit: Ok, it has sth to do with how foldr works...
+encode :: Eq a => [a] -> [(Int, a)]
+encode = foldr helper []
+    where
+        helper x [] = [(1,x)]
+        helper x (y@(a,b):ys)
+            | x == b    = (1+a,x):ys
+            | otherwise = (1,x):y:ys
+
+encodeDirect :: Eq a => [a] -> [ListItem a]
+encodeDirect = map encodeHelper . encode
+--alternatives:
+-- encodeDirect list = map encodeHelper (encode list)
+-- encodeDirect list = map encodeHelper $ encode list
+    where
+        encodeHelper (1,x) = Single x
+        encodeHelper (n,x) = Multiple n x
