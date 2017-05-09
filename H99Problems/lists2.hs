@@ -59,3 +59,54 @@ encodeDirect = map encodeHelper . encode
     where
         encodeHelper (1,x) = Single x
         encodeHelper (n,x) = Multiple n x
+
+-- 14 duplicate the elements of a list
+dupli :: [a] -> [a]
+dupli []     = []
+dupli (x:xs) = x:x:dupli xs
+
+-- 15 replicate the elements of a list a given number of times
+-- didn't know I was allowed to use replicate
+-- efficiency?
+repli :: [a] -> Int -> [a]
+repli [] _   = []
+repli x 1    = x
+repli list n = concatMap (\x -> x : repli [x] (n-1)) list
+-- elegant:
+-- repli xs n = xs >>= replicate n
+
+-- 16 drop every n'th element from a list
+dropEvery :: Eq a => [a] -> Int -> [a]
+dropEvery list n = if n > length list
+                    then list
+                    else x ++ dropEvery y n
+                        where
+                            x = take (n-1) list
+                            y = drop n list
+
+-- 17 split a list into two parts;
+-- length of the first part is given
+-- solution with predefined predicates:
+-- split list n = (take n list, drop n list)
+-- had to look at the solution for "without predefined predicates" :/
+split :: [a] -> Int -> ([a], [a])
+split [] _ = ([], [])
+split l@(x : xs) n = if n > 0
+                        then (x:ys, zs)
+                        else ([], l)
+        where (ys, zs) = split xs (n-1)
+
+-- 18 elements between i and k (including i and k)
+slice :: [a] -> Int -> Int -> [a]
+slice list i k = take (k-i+1) $ drop (i-1) list
+
+-- 19 rotate a list N places to the left (hint: use length and ++)
+rotate :: [a] -> Int -> [a]
+rotate list n = if n > 0
+                then drop n list ++ take n list
+                else drop (length list + n) list ++ take (length list + n) list
+
+-- 20 remove the k'th element from a list
+removeAt :: Int -> [a] -> (a,[a])
+removeAt k list = (list !! (k-1), rest)
+            where rest = take (k-1) list ++ drop k list 
