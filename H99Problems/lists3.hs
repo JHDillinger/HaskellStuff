@@ -95,5 +95,6 @@ combinations k (x:xs) = x_start ++ others
         others = if k <= length xs then combinations k xs else []
 
 
+
 --------------------------------------------------------------
 -- 27 group the elements of a set into disjoint subsets
