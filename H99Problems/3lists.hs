@@ -98,3 +98,51 @@ combinations k (x:xs) = x_start ++ others
 
 --------------------------------------------------------------
 -- 27 group the elements of a set into disjoint subsets
+-- all possibilities how to group the items of a list into sublists with given
+-- group sizes
+-- group' [2,2] "abcd"
+-- all possibilities how to make two disjoint sublists of length 2 out of "abcd"
+-- no chance :/
+
+-- combination takes an Int and returns a list of tuples of lists
+-- the first item in the tuple is a combination of n items
+-- the second item is a list of the remaining items
+-- together all the first items in the tuples give the results of problem 26
+combination :: Int -> [a] -> [([a], [a])]
+combination 0 xs    = [([],xs)]
+combination n []    = []
+combination n (x:xs)= ts ++ ds
+    where
+        ts = [(x:ys, zs) | (ys, zs) <- combination (n-1) xs]
+        ds = [(ys, x:zs) | (ys, zs) <- combination n xs]
+
+-- group takes list of integers (the group sizes) and the list
+-- list comprehension g:gs where
+-- g is the first item of the tuples from above
+-- (combination of n items/first group size of Int list)
+-- gs | recursively call group' with the rest of the integerlist (group sizes)
+-- applied to rs, i.e. the rest of the items which aren't yet in groups of n
+group' :: [Int] -> [a] -> [[[a]]]
+group' [] _ = [[]]
+group' (n:ns) xs =
+    [ g:gs   | (g,rs) <- combination n xs
+             , gs     <- group' ns rs]
+
+
+-- 28 Sorting a list of lists according to length of sublists
+
+-- a) short lists first, longer lists later
+-- quick sort with length of the items
+lsort :: Ord a => [[a]] -> [[a]]
+lsort [] = []
+lsort (x:xs) =  lsort [ a | a <- xs, length a <= length x ]
+                ++ [x] ++
+                lsort [ b | b <- xs, length b > length x]
+
+-- b) sort according to "length frequency"
+-- items with rare lengths placed first
+-- had to look at the solutions only to realize I had almost found it myself
+-- didn't exactly know how to glue it all together
+lfsort :: Ord a => [[a]] -> [[a]]
+lfsort list = concat $ lsort $ lcomp (lsort list)
+                where lcomp = groupBy (\x y -> (length x == length y))
