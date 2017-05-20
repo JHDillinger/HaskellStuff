@@ -13,7 +13,7 @@ insertAt x (y:ys) i =
     if i == 1 then x:y:ys
     else x:insertAt x ys (i-1)
 
---------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- 22 create a list containing all integers within a given range
 range :: Int -> Int -> [Int]
 range i k = [i..k]
@@ -29,7 +29,7 @@ rndSelect xs n
     | otherwise = replicateM n rand
         where rand = do r <- randomRIO (0, length xs - 1)
                         return (xs !! r)
-----------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- 24 Lotto: Draw N different random numbers from the set 1..M
 -- following solution generates duplicates
 -- diff_select :: Int -> Int -> IO [Int]
@@ -55,7 +55,7 @@ diffSelect' n xs = do r <- randomRIO (0, length xs - 1)
                       rest <- diffSelect' (n-1) remaining
                       return ((xs!!r) : rest)
 
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- 25 generate a random permutation of the elements of a list
 -- pretty much the same as in problem 24 diffSelect'
 -- idk about how good this solution is and if I'd found it without 24
@@ -66,7 +66,7 @@ rndPermu xs = do r <- randomRIO (0, length xs -1)
                  rest <- rndPermu remaining
                  return ((xs !! r) : rest)
 
-------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- 26 generate the combinations of K distinct objects
 -- chosen from the N elements of a list
 -- y is the first element of tails, that means the full List
@@ -96,7 +96,7 @@ combinations k (x:xs) = x_start ++ others
 
 
 
---------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- 27 group the elements of a set into disjoint subsets
 -- all possibilities how to group the items of a list into sublists with given
 -- group sizes
@@ -128,7 +128,7 @@ group' (n:ns) xs =
     [ g:gs   | (g,rs) <- combination n xs
              , gs     <- group' ns rs]
 
-
+--------------------------------------------------------------------------------
 -- 28 Sorting a list of lists according to length of sublists
 
 -- a) short lists first, longer lists later
