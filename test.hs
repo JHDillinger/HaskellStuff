@@ -34,8 +34,10 @@ test3 (a,b)      = [(a,b), (not a, b)]
 -- gleich wie: abs n= if n>= 0 then n else -n
 -- heißt: guarded equations sind wie Fallunterscheidungen in Mathe
 
-twoheads :: [a] -> (a,a)
-twoheads (x:s:_) = (x,s)
+twoheads :: [a] -> [a]
+twoheads []       =  error "empty list"
+twoheads [x]      =  [x]
+twoheads (x:s:xs) = [x,s]
 
 safetail :: [a] -> [a]
 safetail a = if null a || length a == 1 then [] else tail a

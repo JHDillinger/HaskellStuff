@@ -55,11 +55,13 @@ flatten (List (x:xs)) = flatten x ++ flatten (List xs)
 
 compress :: Eq a => [a] -> [a]
 compress []     = []
-compress [x]    = [x]
-compress (x:xs) =
-    if x == head xs
-        then compress xs
-    else x:compress xs
+-- compress [x]    = [x]
+compress (x:xs)
+    | x == head xs      = compress xs
+    | otherwise         = x: compress xs
+    --         if x == head xs
+    --     then compress xs
+    -- else x:compress xs
 
 --9 Pack consecutive duplicates of lists elements into sublists
 -- if a list contains repeated elements

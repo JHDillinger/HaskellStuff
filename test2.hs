@@ -9,3 +9,8 @@ search needle haystack =
     in  foldl (\acc x ->
         if take nlen x == needle then True
         else acc) False (tails haystack)
+
+
+secondHead [] = error "empty list"
+secondHead [x] = error "only one element"
+secondHead (x:y:ys) = y
