@@ -1,0 +1,70 @@
+[armin@uni-laptop HaskellStuff]$ stack new roguelike
+Downloading template "new-template" to create project "roguelike" in roguelike/ ...
+
+The following parameters were needed by the template but not provided: author-email, author-name, category, copyright, github-username
+You can provide them in /home/armin/.stack/config.yaml, like this:
+templates:
+  params:
+    author-email: value
+    author-name: value
+    category: value
+    copyright: value
+    github-username: value
+Or you can pass each one as parameters like this:
+stack new roguelike new-template -p "author-email:value" -p "author-name:value" -p "category:value" -p "copyright:value" -p "github-username:value"
+
+Looking for .cabal or package.yaml files to use to init the project.
+Using cabal packages:
+- roguelike/roguelike.cabal
+
+Selecting the best among 10 snapshots...
+
+Downloaded lts-8.21 build plan.    
+Updating package index Hackage (mirrored at https://s3.amazonaws.com/hackage.fpcomplete.com/)                                                                                               Selected mirror https://s3.amazonaws.com/hackage.fpcomplete.com/
+Updating package index Hackage (mirrored at https://s3.amazonaws.com/hackage.fpcomplete.com/)                                                                                               Downloading root
+Updating package index Hackage (mirrored at https://s3.amazonaws.com/hackage.fpcomplete.com/)                                                                                               Selected mirror https://s3.amazonaws.com/hackage.fpcomplete.com/
+Updating package index Hackage (mirrored at https://s3.amazonaws.com/hackage.fpcomplete.com/)                                                                                               Downloading timestamp
+Updating package index Hackage (mirrored at https://s3.amazonaws.com/hackage.fpcomplete.com/)                                                                                               Downloading snapshot
+Updating package index Hackage (mirrored at https://s3.amazonaws.com/hackage.fpcomplete.com/)                                                                                               Downloading mirrors
+Updating package index Hackage (mirrored at https://s3.amazonaws.com/hackage.fpcomplete.com/)                                                                                               Cannot update index (no local copy)
+Updating package index Hackage (mirrored at https://s3.amazonaws.com/hackage.fpcomplete.com/)                                                                                               Downloading index
+Updating package index Hackage (mirrored at https://s3.amazonaws.com/hackage.fpcomplete.com/)                                                                                               Updated package list downloaded
+Updating package index Hackage (mirrored at https://s3.amazonaws.com/hackage.fpcomplete.com/)                                                                                               Populated index cache.    
+* Matches lts-8.21
+
+Selected resolver: lts-8.21
+Initialising configuration using resolver: lts-8.21
+Total number of user packages considered: 1
+Writing configuration to file: roguelike/stack.yaml
+All done.
+
+
+[armin@uni-laptop roguelike]$ stack setup
+Preparing to install GHC (ncurses6) to an isolated location.
+This will not interfere with any system-level installation.
+Downloaded ghc-ncurses6-8.0.2.                                      
+Installed GHC.                                                                          
+stack will use a sandboxed GHC it installed
+For more information on paths, see 'stack path' and 'stack exec env'
+To use this GHC and packages outside of a project, consider using:
+stack ghc, stack ghci, stack runghc, or stack exec
+
+
+[armin@uni-laptop roguelike]$ stack build
+[1 of 2] Compiling Main             ( /home/armin/.stack/setup-exe-src/setup-mPHDZzAJ.hs, /home/armin/.stack/setup-exe-src/setup-mPHDZzAJ.o )
+[2 of 2] Compiling StackSetupShim   ( /home/armin/.stack/setup-exe-src/setup-shim-mPHDZzAJ.hs, /home/armin/.stack/setup-exe-src/setup-shim-mPHDZzAJ.o )
+Linking /home/armin/.stack/setup-exe-cache/x86_64-linux-ncurses6/tmp-Cabal-simple_mPHDZzAJ_1.24.2.0_ghc-8.0.2 ...
+roguelike-0.1.0.0: configure (lib + exe)
+Configuring roguelike-0.1.0.0...
+roguelike-0.1.0.0: build (lib + exe)
+Preprocessing library roguelike-0.1.0.0...
+[1 of 1] Compiling Lib              ( src/Lib.hs, .stack-work/dist/x86_64-linux-ncurses6/Cabal-1.24.2.0/build/Lib.o )
+Preprocessing executable 'roguelike-exe' for roguelike-0.1.0.0...
+[1 of 1] Compiling Main             ( app/Main.hs, .stack-work/dist/x86_64-linux-ncurses6/Cabal-1.24.2.0/build/roguelike-exe/roguelike-exe-tmp/Main.o )
+Linking .stack-work/dist/x86_64-linux-ncurses6/Cabal-1.24.2.0/build/roguelike-exe/roguelike-exe ...
+roguelike-0.1.0.0: copy/register
+Installing library in
+/home/armin/github/HaskellStuff/roguelike/.stack-work/install/x86_64-linux-ncurses6/lts-8.21/8.0.2/lib/x86_64-linux-ghc-8.0.2/roguelike-0.1.0.0-EL037VKdlMg8Pfe8bMznq3
+Installing executable(s) in
+/home/armin/github/HaskellStuff/roguelike/.stack-work/install/x86_64-linux-ncurses6/lts-8.21/8.0.2/bin
+Registering roguelike-0.1.0.0...

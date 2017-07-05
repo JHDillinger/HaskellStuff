@@ -76,3 +76,7 @@ primeFactorsMult n = nub [(x, count x pf) | x <- pf]
 -- alternatively using encode from problem 10
 -- prime_factors_mult n = map swap $ encode $ primeFactors n
 --   where swap (x,y) = (y,x)
+
+--------------------------------------------------------------------------------
+
+-- 37

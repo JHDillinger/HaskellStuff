@@ -14,3 +14,10 @@ search needle haystack =
 secondHead [] = error "empty list"
 secondHead [x] = error "only one element"
 secondHead (x:y:ys) = y
+
+a >+> b = a+b
+
+test a b = do
+    a <- b+1
+    a <- a+2
+    return a
