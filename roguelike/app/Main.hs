@@ -4,9 +4,9 @@ module Main where
 
 -- base
 import           Control.Monad          (when)
-import           System.Exit            (die)
 import           Data.Char
 import           Data.IORef
+import           System.Exit            (die)
 -- bytestring
 import           Data.ByteString        (ByteString)
 -- JuicyPixels
@@ -16,22 +16,22 @@ import           Control.Monad.IO.Class
 -- embed-file
 import           Data.FileEmbed
 -- vector
-import Data.Vector (Vector)
-import qualified Data.Vector as V
+import           Data.Vector            (Vector)
+import qualified Data.Vector            as V
 -- hexes
 import           Hexes
 
 
 
--- | The data for our display sstem. It gets embedded into our binary during
--- the compilation pricess, so we won't have to distribute any support files
+-- | The data for our display system. It gets embedded into our binary during
+-- the compilation process, so we won't have to distribute any support files
 
 imageBytes :: ByteString
 imageBytes = $(embedFile "font-data/FixedSysExcelsior.png")
 
 
 -- | Converts any pixel that is a fully opaque green into a tranparent black
--- piel instead. any other kind of pixel is unaffected
+-- pixel instead. any other kind of pixel is unaffected
 greenToAlpha :: PixelRGBA8 -> PixelRGBA8
 greenToAlpha (PixelRGBA8 0 255 0 255) = PixelRGBA8 0 0 0 0
 greenToAlpha p                        = p
@@ -39,7 +39,7 @@ greenToAlpha p                        = p
 -- | Holds the entire state of the game in a single big blob.
 data GameState = GameState {
     playerPos :: (Int,Int),
-    dungeon :: Dungeon
+    dungeon   :: Dungeon
     } deriving (Read, Show)
 
 -- | Constructs a GameState with the player at 5,5
@@ -55,9 +55,9 @@ data Terrain = Open
 
 -- | A single floor of the complete dungeon complex.
 data Dungeon = Dungeon {
-    dungeonWidth :: Int,
+    dungeonWidth  :: Int,
     dungeonHeight :: Int,
-    dungeonTiles :: Vector Terrain
+    dungeonTiles  :: Vector Terrain
     } deriving (Read, Show)
 
 
@@ -83,7 +83,6 @@ getTerrainAt (x,y) d = let
         else V.unsafeIndex (dungeonTiles d) index
 
 
-
 main :: IO ()
 main = do
     baseImage <- pixelMap greenToAlpha <$> either die (pure . convertRGBA8) (decodeImage imageBytes)
@@ -94,18 +93,18 @@ main = do
         setKeyCallback $ Just $ \key scanCode keyState modKeys -> liftIO $ do
             case keyState of
                 KeyState'Released -> pure ()
-                _ -> modifyIORef gameRef (gameUpdate key)
+                _                 -> modifyIORef gameRef (gameUpdate key)
         gameLoop gameRef
 
 
 -- | Converts a key press into the appropriate game state update.
 gameUpdate :: Key -> GameState -> GameState
 gameUpdate key = case key of
-    Key'Up -> bumpPlayer South
-    Key'Down -> bumpPlayer North
-    Key'Left -> bumpPlayer West
+    Key'Up    -> bumpPlayer North
+    Key'Down  -> bumpPlayer South
+    Key'Left  -> bumpPlayer West
     Key'Right -> bumpPlayer East
-    _ -> id
+    _         -> id
 
 
 
@@ -126,14 +125,14 @@ bumpPlayer dir game = let
     targetx = px + case dir of
         East -> 1
         West -> -1
-        _ -> 0
+        _    -> 0
     targety = py + case dir of
         North -> 1
         South -> -1
-        _ -> 0
+        _     -> 0
     in case getTerrainAt (targetx,targety) (dungeon game) of
         Wall -> game
-        _ -> game { playerPos = (targetx,targety) }
+        _    -> game { playerPos = (targetx,targety) }
 
 -- | The core loop of the program. It needs the GameState in an IORef because
 -- the GLFW events update the game state via callback.
@@ -151,21 +150,23 @@ gameLoop gameRef = do
             openID = fromIntegral $ ord ' '
             openBG = V3 0 0 0
             openFG = V4 0 0 0 0
-            wallID = fromIntegral $ ord '#'
+            wallID = 1
             wallBG = V3 0 0 0
             wallFG = V4 0.388 0.152 0.027 1
             (px,py) = playerPos gameState
             terrainList = V.toList $ dungeonTiles $ dungeon gameState
             width = dungeonWidth $ dungeon gameState
+            height = dungeonHeight $ dungeon gameState
             enumeratedTerrain = zip [0..] terrainList
             updateList = map (\(i,t) -> let
-                (y,x) = i `divMod` width
+                (y',x) = i `divMod` width
+                y = height - (1+y')
                 in if px == x && py == y
                     then (playerID, playerBG, playerFG)
                     else case t of
                         Open -> (openID, openBG, openFG)
                         Wall -> (wallID, wallBG, wallFG)
-                        _ -> (1, playerBG, playerFG)) enumeratedTerrain
+                        _    -> (1, playerBG, playerFG)) enumeratedTerrain
         setAllByID updateList
         -- "blit"
         refresh

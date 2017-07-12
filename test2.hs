@@ -1,4 +1,4 @@
-import Data.List
+import           Data.List
 
 main :: IO ()
 main = putStrLn "hello, world"
@@ -11,8 +11,8 @@ search needle haystack =
         else acc) False (tails haystack)
 
 
-secondHead [] = error "empty list"
-secondHead [x] = error "only one element"
+secondHead []       = error "empty list"
+secondHead [x]      = error "only one element"
 secondHead (x:y:ys) = y
 
 a >+> b = a+b
