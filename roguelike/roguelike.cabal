@@ -27,9 +27,15 @@ executable game
                         JuicyPixels,
                         file-embed,
                         transformers,
-                        vector
+                        vector,
+                        random,
+                        MonadRandom,
+                        pcgen,
+                        primitive,
+                        containers
     default-language:   Haskell2010
-    other-extensions:   TemplateHaskell
+    other-extensions:   TemplateHaskell,
+                        Trustworthy
     -- ghc-options:        -ddump-splices  -ddump-to-file
     -- ghc-options:        -O2
     -- ghc-options:        -optl-mwindows

@@ -5,6 +5,7 @@ packages:
     git: https://github.com/Lokathor/hexes.git
     commit: 38f855f46b3e9c9c7c6d3a668d87af9cdc687e8a
   extra-dep: true
-extra-deps: []
+extra-deps:
+    - pcgen-2.0.1
 flags: {}
 extra-package-dbs: []

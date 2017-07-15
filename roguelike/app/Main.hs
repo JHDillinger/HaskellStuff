@@ -5,21 +5,33 @@ module Main where
 -- base
 import           Control.Monad          (when)
 import           Data.Char
-import           Data.IORef
+import           Data.IORef             (IORef, modifyIORef, newIORef,
+                                         readIORef)
 import           System.Exit            (die)
 -- bytestring
 import           Data.ByteString        (ByteString)
 -- JuicyPixels
-import           Codec.Picture
+import           Codec.Picture          (PixelRGBA8 (..), convertRGBA8,
+                                         decodeImage, pixelMap)
 -- transformers
-import           Control.Monad.IO.Class
+import           Control.Monad.IO.Class (liftIO)
 -- embed-file
-import           Data.FileEmbed
+import           Data.FileEmbed         (embedFile)
 -- vector
 import           Data.Vector            (Vector)
 import qualified Data.Vector            as V
 -- hexes
 import           Hexes
+
+--pcgen
+import           Data.PCGen             (PCGen)
+
+-- random
+import           System.Random
+
+
+-- our game
+import           Dungeon
 
 
 
@@ -38,49 +50,16 @@ greenToAlpha p                        = p
 
 -- | Holds the entire state of the game in a single big blob.
 data GameState = GameState {
+    gameGen   :: PCGen,
     playerPos :: (Int,Int),
     dungeon   :: Dungeon
     } deriving (Read, Show)
 
 -- | Constructs a GameState with the player at 5,5
-mkGameState :: Int -> Int -> GameState
-mkGameState xMax yMax = GameState (5,5) (mkDungeon xMax yMax)
-
--- | The terrain types of the dungeon.
-data Terrain = Open
-             | Wall
-             | StairsDown
-             | StairsUp
-             deriving (Read, Show)
-
--- | A single floor of the complete dungeon complex.
-data Dungeon = Dungeon {
-    dungeonWidth  :: Int,
-    dungeonHeight :: Int,
-    dungeonTiles  :: Vector Terrain
-    } deriving (Read, Show)
-
-
--- | Constructs a dungeon with walls along the outer edges.
-mkDungeon :: Int -> Int -> Dungeon
-mkDungeon xMax yMax = Dungeon xMax yMax $
-    V.generate (xMax*yMax) (\i -> let
-        (y,x) = i `divMod` xMax
-        in if x == 0 || x == xMax-1 || y == 0 || y == yMax-1
-            then Wall
-            else Open)
-
-
--- | Determines the terrain at the location speficied. An out of bounds location
--- defaults to being a Wall value.
-getTerrainAt :: (Int,Int) -> Dungeon -> Terrain
-getTerrainAt (x,y) d = let
-    width = dungeonWidth d
-    height = dungeonHeight d
-    index = y * width + x
-    in if y < 0 || x < 0 || y >= height || x >= width
-        then Wall
-        else V.unsafeIndex (dungeonTiles d) index
+mkGameState :: PCGen -> Int -> Int -> GameState
+mkGameState gen xMax yMax = let
+    (d,g) = rogueDungeon xMax yMax gen
+    in GameState g (5,5) d
 
 
 main :: IO ()
@@ -88,7 +67,8 @@ main = do
     baseImage <- pixelMap greenToAlpha <$> either die (pure . convertRGBA8) (decodeImage imageBytes)
     let rows = 24
         cols = 80
-    gameRef <- newIORef $ mkGameState cols rows
+    startingGen <- randomIO
+    gameRef <- newIORef $ mkGameState startingGen cols rows
     runHexes rows cols baseImage $ do
         setKeyCallback $ Just $ \key scanCode keyState modKeys -> liftIO $ do
             case keyState of
@@ -144,29 +124,29 @@ gameLoop gameRef = do
         pollEvents
         -- draw to the screen
         gameState <- liftIO $ readIORef gameRef
+        (rows, cols) <- getRowColCount
         let playerID = fromIntegral $ ord '@'
             playerBG = V3 0 0 0
             playerFG = V4 1 1 1 1
             openID = fromIntegral $ ord ' '
             openBG = V3 0 0 0
             openFG = V4 0 0 0 0
-            wallID = 1
+            wallID = 5
             wallBG = V3 0 0 0
             wallFG = V4 0.388 0.152 0.027 1
             (px,py) = playerPos gameState
-            terrainList = V.toList $ dungeonTiles $ dungeon gameState
-            width = dungeonWidth $ dungeon gameState
-            height = dungeonHeight $ dungeon gameState
-            enumeratedTerrain = zip [0..] terrainList
-            updateList = map (\(i,t) -> let
-                (y',x) = i `divMod` width
-                y = height - (1+y')
+            d= dungeon gameState
+            cellCount = rows*cols
+            updateList = map (\cellIndex -> let
+                (r,c) = cellIndex `divMod` cols
+                x = c
+                y = rows - (r+1)
                 in if px == x && py == y
                     then (playerID, playerBG, playerFG)
-                    else case t of
+                    else case getTerrainAt (x,y) d of
                         Open -> (openID, openBG, openFG)
                         Wall -> (wallID, wallBG, wallFG)
-                        _    -> (1, playerBG, playerFG)) enumeratedTerrain
+                        _    -> (1, playerBG, playerFG)) [0 .. cellCount -1]
         setAllByID updateList
         -- "blit"
         refresh
