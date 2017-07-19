@@ -12,7 +12,8 @@ main = print "test"
 isPrime :: Int -> Bool
 isPrime n = factors n == [1,n]
 
-factors n = [y | y <- [2..n], n `mod` y == 0]
+factors :: Int -> [Int]
+factors n = [y | y <- [1..n], n `mod` y == 0]
 --------------------------------------------------------------------------------
 -- 32 greatest common divisor using euclid's algorithm
 myGCD :: Int -> Int -> Int
@@ -79,4 +80,32 @@ primeFactorsMult n = nub [(x, count x pf) | x <- pf]
 
 --------------------------------------------------------------------------------
 
--- 37
+-- 37 Calculate Euler's totient function phi(m) (improved).
+
+totientImp :: Int -> Int
+totientImp m = product [(p-1)*p^(c-1) | (p,c) <- primeFactorsMult m]
+
+--------------------------------------------------------------------------------
+--39 A list of prime numbers
+primesR :: Int -> Int -> [Int]
+primesR k n = [ x | x <- [k..n], isPrime x]
+--------------------------------------------------------------------------------
+--40 Goldbach's conjecture: every positive, even number > 2 is the sum
+-- of two prime numbers
+
+-- pretty inefficient solution for numbers greater than 10^4 or sth
+-- solves the problem though
+goldbach :: Int -> (Int, Int)
+goldbach n
+    | even n == False = error "given number is not even"
+    | otherwise = head [(x,y) | x <- p, y <- p, x+y == n]
+    where
+        p = primesR 1 n -- why does the solution say primesR 2 (n-2)?
+--------------------------------------------------------------------------------
+-- 41 Given a range of integers by its lower and upper limit,
+-- print a list of all even numbers and their Goldbach composition.
+
+goldbachList :: Int -> Int -> [(Int,Int)]
+goldbachList k n = map (\x -> goldbach x) e
+    where
+        e = [ x | x <- [k..n], even x, x > 2]
