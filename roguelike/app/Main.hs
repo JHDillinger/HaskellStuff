@@ -86,8 +86,6 @@ gameUpdate key = case key of
     Key'Right -> bumpPlayer East
     _         -> id
 
-
-
 -- | The directions you can move.
 data Direction = North
                | South

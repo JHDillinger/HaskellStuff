@@ -17,7 +17,14 @@ secondHead (x:y:ys) = y
 
 a >+> b = a+b
 
+f :: Int -> Int
+f x = "test"  + 1
+
+example2 :: Integer
+example2 = foldr (+) 0 tree
+
+
 test a b = do
-    a <- b+1
-    a <- a+2
+    a <-  b+1
+    a <-   a+2
     return a
